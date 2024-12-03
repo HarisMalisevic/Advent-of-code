@@ -1,10 +1,10 @@
 ﻿
 using System.ComponentModel;
 
-bool isSafeData(int[] data)
+bool isSafeData(List<int> data)
 {
 
-    int numberOfDataPoints = data.Length;
+    int numberOfDataPoints = data.Count();
 
     if (numberOfDataPoints <= 1)
         return false;
@@ -37,10 +37,50 @@ bool isSafeData(int[] data)
     return true;
 }
 
+bool isSafeDataWithDamper(List<int> data)
+{
+
+    int numberOfDataPoints = data.Count();
+
+    if (numberOfDataPoints <= 1)
+        return false;
+
+    bool areCloseNumbers(int a, int b)
+    {
+        int diff = Math.Abs(a - b);
+
+        return 1 <= diff && diff <= 3;
+    }
+
+    if (numberOfDataPoints == 2)
+    {
+        return areCloseNumbers(data[0], data[1]);
+    }
+
+    List<int> tempData;
+
+
+    for (int ignoredIndex = -1; ignoredIndex < numberOfDataPoints; ignoredIndex++)
+    {
+        tempData = new(data);
+        if (ignoredIndex != -1)
+        {
+            tempData.RemoveAt(ignoredIndex);
+        }
+
+        if (isSafeData(tempData))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 String? line;
 
 int safeDataCount = 0;
+int safeDataWithDamperCount = 0;
 
 try
 {
@@ -52,10 +92,13 @@ try
     {
         string[] parts = line.Split(' ');
 
-        int[] inputDataRow = Array.ConvertAll(parts, int.Parse);
+        List<int> inputDataRow = [.. Array.ConvertAll(parts, int.Parse)];
 
         if (isSafeData(inputDataRow))
             safeDataCount++;
+        
+        if (isSafeDataWithDamper(inputDataRow))
+            safeDataWithDamperCount++;
 
 
         line = inputFile.ReadLine();
@@ -69,3 +112,4 @@ catch (Exception e)
 }
 
 Console.WriteLine("Number of safe data rows: " + safeDataCount);
+Console.WriteLine("Number of safe data rows with damper: " + safeDataWithDamperCount);
