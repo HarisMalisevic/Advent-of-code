@@ -45,9 +45,34 @@ catch (Exception e)
 
 long sumOfDistances = 0;
 
+Dictionary<int, int> numberAndOccurances = new Dictionary<int, int>();
+
+
 for (int i = 0; i < firstColumn.Count; i++)
 {
     sumOfDistances += Math.Abs(firstColumn[i] - secondColumn[i]);
+
+    if (numberAndOccurances.ContainsKey(secondColumn[i]))
+    {
+        numberAndOccurances[secondColumn[i]]++;
+    }
+    else
+    {
+        numberAndOccurances[secondColumn[i]] = 1;
+    }
+
 }
 
+long similarityScore = 0;
+
+for (int i = 0; i < firstColumn.Count; i++)
+{
+    if (numberAndOccurances.ContainsKey(firstColumn[i]))
+        similarityScore += firstColumn[i] * numberAndOccurances[firstColumn[i]];
+}
+
+
+
+
 Console.WriteLine("The sum of the distances between the elements of the two columns is: " + sumOfDistances);
+Console.WriteLine("Similarity Score: " + similarityScore);
