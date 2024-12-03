@@ -19,6 +19,7 @@ try
         line = inputFile.ReadLine();
     }
 
+    inputFile.Close();
 
 }
 catch (Exception e)
